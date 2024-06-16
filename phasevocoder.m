@@ -4,7 +4,7 @@ sr = 8000;
 x = cos(2 * pi * 440 * (0:1/sr:1));
 
 EPS = 1e-4;
-frameSize = 2048;
+frameSize = 4096;
 nOverlap = 4;
 hopSize = frameSize / nOverlap;
 window = hann(frameSize);
@@ -45,9 +45,9 @@ for b = 1:nBlocks
         if mod(pBuffer, hopSize) == 1
 
             % Read from circular buffer.
-            for n = 1:frameSize
+            for i = 1:frameSize
                 
-                xNow(n) = readBuffer(pBuffer);
+                xNow(i) = readBuffer(pBuffer);
                 pBuffer = mod(pBuffer, frameSize) + 1;
 
             end
@@ -59,7 +59,7 @@ for b = 1:nBlocks
             % As per Puckette phase-locked vocoder paper.
             %
             % https://msp.ucsd.edu/Publications/mohonk95.pdf
-            
+
             Y = X .* Y ./ (lastX + EPS) ./ (abs(Y ./ X) + EPS);
             yNow = window .* ifft(Y);
 
@@ -88,3 +88,4 @@ end
 timeplot(x, sr); hold on;
 timeplot(y, sr); hold on;
 xlabel("Time (s)");
+soundsc(y, sr);
