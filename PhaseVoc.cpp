@@ -136,6 +136,7 @@ int main(void)
 		window[i] = pow(cos(M_PI * (float(i) - float(hN)) / frameSize), 2.0);
 	}
 
+	// This is what breaks the code.
 	for (int i = 0; i < kBufferSize; i++)
 	{
 		xNow[i] = 0.0f;
